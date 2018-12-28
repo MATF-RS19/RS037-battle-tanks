@@ -7,10 +7,8 @@
 #define FILENAME "universe.bmp"
 #define POMERAJ 0.02
 
-int up=1;
+int up=1, up2 = 1;
 double up_vector_y_cor=0;
-static int mouse_x, mouse_y;
-static float matrix[16];
 
 void on_display(void);
 void initialize(void);
@@ -18,9 +16,6 @@ void on_reshape(int width, int height);
 void on_keyboard(unsigned char key, int x, int y);
 void on_timer(int value);
 void prepreka(void);
-static void on_mouse(int button, int state, int x, int y);
-static void on_motion(int x, int y);
-
 
 int width_window = 700;
 int height_window = 500;
@@ -30,7 +25,6 @@ GLuint slika_pozadine;
 
 void initialize(void){
   glClearColor(0,0,0,0);
-  glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -42,44 +36,6 @@ void initialize(void){
   glEnable(GL_DEPTH_TEST);
 }
 
-static void on_mouse(int button, int state, int x, int y)
-{
-    mouse_x = x;
-    mouse_y = y;
-}
-
-
-
-static void on_motion(int x, int y)
-{
-    /* Promene pozicije pokazivaca misa. */
-    int delta_x, delta_y;
-
-    /* Izracunavaju se promene pozicije pokazivaca misa. */
-    delta_x = x - mouse_x;
-    delta_y = y - mouse_y;
-    
-
-      
-    /* Pamti se nova pozicija pokazivaca misa. */
-    mouse_x = x;
-    mouse_y = y;
-
-    /* Izracunava se nova matrica rotacije. */
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-        glLoadIdentity();
-        //glRotatef(180 * (float) delta_x / width_window, 0, 1, 0);
-        glRotatef(180 * (float) delta_y / height_window, 0, 0, 1);
-        glMultMatrixf(matrix);
-
-        glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
-    glPopMatrix();
-    
-    glutPostRedisplay();
-}
-
-
 void on_reshape(int width, int height){
   width_window = width;
   height_window =  height;
@@ -88,13 +44,16 @@ void on_reshape(int width, int height){
   glViewport(0,0,width_window,height_window);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(53,width_window/(float)height_window,1, 15);
+  gluPerspective(70,width_window/(float)height_window,1, 100);
   
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0,0.5,2,0,0,0,0,1,0);
 }
 
-class floor{
+class floor_tank{
 public:
-    floor(double x, double y, double z)
+    floor_tank(double x, double y, double z)
     : m_x(x), m_y(y), m_z(z)
     {};
     
@@ -129,66 +88,149 @@ public:
     : m_x(x), m_y(y), m_z(z){};
   
     void gamer1_draw(void){
-      //CRVENI
+      //CRVENI igrac
       glPushMatrix();
       glTranslatef(m_x, m_y, m_z);
+      /* iscrtavanje podnozja tenka */
       glPushMatrix();      
 	glPushMatrix();
 	  glColor3f(0.8,0,0);
 	  glScalef(1.5,0.6,1);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
 	glPopMatrix();
+	/* iscrtavanje gornjeg dela tenka */
 	glPushMatrix();
 	  glColor3f(0.6,0,0);
-	  glTranslatef(0,0.1,0.02);
+	  glTranslatef(-0.01,0.05,0.02);
 	  glScalef(1,0.4,0.5);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
+	  
 	glPopMatrix();
+	/* nisan -za pucanje */
 	glPushMatrix();
-	  glColor3f(0,0,0);
-//	  glMultMatrixf(matrix);
-	  glTranslatef(-0.2,0.15,0.02);
+	glTranslatef(-0.01,0.05,0);
+	glRotatef(-m_rot, 0,0,1);
+	  glColor3f(0,1,0);
+	  glTranslatef(-0.08,0.03,0.02);
 	  glScalef(1.5,0.1,0.1);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
 	glPopMatrix();
       glPopMatrix();
       glTranslatef(-m_x, -m_y, -m_z);
       glPopMatrix();
       }
-      
-      double health(){
+      /* zeleno crveni pravougaonik koji pokazuje koliko je helta ostalo igracu pre prekida igrice */
+      void health(){
 	glPushMatrix();
-	  glTranslatef(1,-1,0);
+	  glTranslatef(1,-0.5,0);
 	  glBegin(GL_POLYGON);
 	    glColor3f(0,1,0);
-	    glVertex3f(-0.5,0.05,0);
-	    glVertex3f(-0.5,-0.05,0);
+	    glVertex3f(-0.3,0.05,0);
+	    glVertex3f(-0.3,-0.05,0);
 	    glColor3f(1,0,0);
-	    glVertex3f(0.5,-0.05,0);
-	    glVertex3f(0.5,0.05,0);
+	    glVertex3f(0.3,-0.05,0);
+	    glVertex3f(0.3,0.05,0);
 	  glEnd();
 	glPopMatrix();
-		
+		/* iscrtavanje crvnog pravouganoika preko helta tako da pokazuje koliko puta je ppogodjen igrac */
 	glPushMatrix();
-	  glTranslatef(1,-1,0);
+	  glTranslatef(1,-0.5,0);
 	  glBegin(GL_POLYGON);
 	    glColor3f(0,0,0);
-	    glVertex3f(-0.5,0.05,0);
-	    glVertex3f(-0.5,-0.05,0);
-	    glVertex3f(-0.5+0.5*m_health_red,-0.05,0);
-	    glVertex3f(-0.5+0.5*m_health_red,0.05,0);
+	    glVertex3f(-0.3,0.05,0);
+	    glVertex3f(-0.3,-0.05,0);
+	    glVertex3f(-0.3+0.3*m_health_red,-0.05,0);
+	    glVertex3f(-0.3+0.3*m_health_red,0.05,0);
 	  glEnd();
 	glPopMatrix();
 	    
-	return m_health_red;
       }
+            /* merac brzine metka koji se ispaljuje  */
+    void speed(){
+   
+      glDisable(GL_DEPTH_TEST);
+      glTranslatef(-0.9,0.5,0);   
+	glPushMatrix();
+	  glPushMatrix();
+	  glBegin(GL_POLYGON);
+	    glColor3f(1,0,0);
+	    glVertex3f(0.02,0.15,0.5);
+	    glVertex3f(-0.02,0.15,0.5);
+	    glColor3f(0,1,0);
+	    glVertex3f(-0.02,-0.15,0.5);
+	    glVertex3f(0.02,-0.15,0.5);
+	  glEnd();
 
+	glPopMatrix();
+	
+    if(up2){
+      m_y2+=up_vector_y_cor;
+      if(m_y2>0.13){	
+	up2=0;
+      }
+    }
+    else{
+      m_y2-=up_vector_y_cor;
+      if(m_y2<=-0.13){
+	up2=1;
+      }
+    }
+    
+    glTranslatef(0,-m_y2,0);
+    glPushMatrix();
+    glColor3f(1,1,1);
+      glBegin(GL_POLYGON);
+	glVertex3f(0.02,0.01,0.5);
+	glVertex3f(-0.02,0.01,0.5);
+	glVertex3f(-0.02,-0.01,0.5);
+	glVertex3f(0.02,-0.01,0.5);    
+	glEnd();
+    glPopMatrix();
+    glTranslatef(0,m_y2,0);
+	
+    glPopMatrix();
+    glTranslatef(0.9,-0.5,0);   
+
+   
+  }
  
     double m_x;
-    double m_y;
+    double m_y, m_y2 = 0;
     double m_z;
+    double m_rot = 0;
     double m_health_red  = 0;
    
+};
+
+class fire_red{
+  
+public:
+  fire_red()
+  {}
+  
+   fire_red(double x, double y, double z, int fire_r)
+   :m_x(x), m_y(y), m_z(z), fire_r(fire_r){};
+   
+   void fire(double m_x, double m_y, double m_z){
+   	glDisable(GL_DEPTH_TEST);
+
+	glPushMatrix();
+	  glTranslatef((m_x), (m_y+0.08), m_z);
+	  glPushMatrix();
+	  glRotatef(-fire_rot, 0,0,1);
+	  glTranslatef(-0.15,0.01,0.01);
+	  glColor3f(1,1,1);
+	  glutSolidSphere(0.01,10,10);
+	glPopMatrix();
+	glPopMatrix();
+      }
+      
+  double m_x;
+  double m_y;
+  double m_z;
+  int fire_r = 0;
+  double fire_rot;
+  double fire_speed;
 };
 
 class gamer2{
@@ -209,63 +251,103 @@ public:
 	glPushMatrix();
 	  glColor3f(0,0,0.8);
 	  glScalef(1.5,0.6,1);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
 	glPopMatrix();
 	glPushMatrix();
 	  glColor3f(0,0,0.6);
-	  glTranslatef(0,0.1,0.02);
+	  glTranslatef(0.01,0.05,0.02);
 	  glScalef(1,0.4,0.5);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
 	glPopMatrix();
 	/*za pucanje*/
 	glPushMatrix();
+	glTranslatef(0.01,0.05,0);
+	glRotatef(m_rot,0,0,1);
 	  glColor3f(0,1,0);
-	  glPushMatrix();
-	  glTranslatef(0,0.15,0.02);
-	  glScalef(0.5,0.3,0.1);
-	  glutSolidCube(0.2);
-	  glPopMatrix();
-	  glMultMatrixf(matrix);
-	  glTranslatef(0.2,0.15,0.02);
+	  glTranslatef(0.08,0.03,0.02);
 	  glScalef(1.5,0.1,0.1);
-	  glutSolidCube(0.2);
+	  glutSolidCube(0.1);
 	glPopMatrix();
       glPopMatrix();
       glTranslatef(-m_x, -m_y, -m_z);
       glPopMatrix();
       }
       
-      double health(){
+      void health(){
 	glPushMatrix();
-	  glTranslatef(-1,-1,0);
+	  glTranslatef(-1,-0.5,0);
 	  glBegin(GL_POLYGON);
 	    glColor3f(1,0,0);
-	    glVertex3f(-0.5,0.05,0);
-	    glVertex3f(-0.5,-0.05,0);
+	    glVertex3f(-0.3,0.05,0);
+	    glVertex3f(-0.3,-0.05,0);
 	    glColor3f(0,1,0);
-	    glVertex3f(0.5,-0.05,0);
-	    glVertex3f(0.5,0.05,0);
+	    glVertex3f(0.3,-0.05,0);
+	    glVertex3f(0.3,0.05,0);
 	  glEnd();
 	glPopMatrix();
 	
 	glPushMatrix();
-	  glTranslatef(-1,-1,0);
+	  glTranslatef(-1,-0.5,0);
 	  glBegin(GL_POLYGON);
 	    glColor3f(0,0,0);
-	    glVertex3f(-0.5,0.05,0);
-	    glVertex3f(-0.5,-0.05,0);
-	    glVertex3f(-0.5 + 0.5*m_health_blue,-0.05,0);
-	    glVertex3f(-0.5 + 0.5*m_health_blue,0.05,0);
+	    glVertex3f(-0.3,0.05,0);
+	    glVertex3f(-0.3,-0.05,0);
+	    glVertex3f(-0.3 + 0.3*m_health_blue,-0.05,0);
+	    glVertex3f(-0.3 + 0.3*m_health_blue,0.05,0);
 	  glEnd();
 	glPopMatrix();
-	  return m_health_blue;
+//	  return m_health_blue;
       }
-  
-//private:
+      
+    void speed(){
+	glDisable(GL_DEPTH_TEST);
+      glTranslatef(0.9,0.5,0);   
+	glPushMatrix();
+	  glPushMatrix();
+	  glBegin(GL_POLYGON);
+	    glColor3f(1,0,0);
+	    glVertex3f(0.02,0.15,0.5);
+	    glVertex3f(-0.02,0.15,0.5);
+	    glColor3f(0,1,0);
+	    glVertex3f(-0.02,-0.15,0.5);
+	    glVertex3f(0.02,-0.15,0.5);
+	  glEnd();
+
+	glPopMatrix();
+	
+    if(up2){
+      m_y2-=up_vector_y_cor;
+      if(m_y2>0.13){	
+	up2=0;
+      }
+    }
+    else{
+      m_y2+=up_vector_y_cor;
+      if(m_y2<=-0.13){
+	up2=1;
+      }
+    }
+    glTranslatef(0,-m_y2,0);
+    glPushMatrix();
+    glColor3f(1,1,1);
+      glBegin(GL_POLYGON);
+	glVertex3f(0.02,0.01,0.5);
+	glVertex3f(-0.02,0.01,0.5);
+	glVertex3f(-0.02,-0.01,0.5);
+	glVertex3f(0.02,-0.01,0.5);    
+	glEnd();
+    glPopMatrix();
+    glTranslatef(0,m_y2,0);
+	
+    glPopMatrix();
+    glTranslatef(-0.9,-0.5,0);   
+
+  }
   
     double m_x;
-    double m_y;
+    double m_y, m_y2 = 0;
     double m_z;
+    double m_rot = 0;
     double m_health_blue = 0;
 };
 /* zid */
@@ -308,10 +390,45 @@ public:
 
 };
 
-gamer1 gRed(0.6,0.06,0.5);
-gamer2 gBlue(-0.6,0.06,0.5);
-floor floor(1,0,1);
+class fire_blue{
+  
+public:
+  fire_blue()
+  {}
+  
+   fire_blue(double x, double y, double z, int fire_b)
+   :m_x(x), m_y(y), m_z(z), fire_b(fire_b){};
+   
+   void fire(double m_x, double m_y, double m_z){
+   	glDisable(GL_DEPTH_TEST);
+
+	glPushMatrix();
+	  glTranslatef((m_x), (m_y+0.08), m_z);
+	  glPushMatrix();
+	  glRotatef(fire_rot, 0,0,1);
+	  glTranslatef(0.15,0.01,0.01);
+	  glColor3f(1,1,1);
+	  glutSolidSphere(0.01,10,10);
+	glPopMatrix();
+	glPopMatrix();
+      }
+      
+  double m_x;
+  double m_y;
+  double m_z;
+  int fire_b = 0;
+  double fire_rot;
+  double fire_speed;
+};
+
+
+
+gamer1 gRed(0.6,0.06,0.25);
+gamer2 gBlue(-0.6,0.06,0.25);
+floor_tank floor_tank(1,0,0.5);
 obstacle obstacle(0,0,0);
+fire_red fire_red(0,0,0,0);
+fire_blue fire_blue(0,0,0,0);
 
 int main(int argc, char* argv[]){
 
@@ -326,25 +443,14 @@ int main(int argc, char* argv[]){
   glutDisplayFunc(on_display);
   glutReshapeFunc(on_reshape);
   glutKeyboardFunc(on_keyboard);
-  glutMouseFunc(on_mouse);
-  glutMotionFunc(on_motion);
-  
-  mouse_x = 0;
-  mouse_y = 0;
   
   glutMainLoop();
   return 0;
 }
 
 void on_display(void){
-
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glShadeModel(GL_SMOOTH);  
-   glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(0,0.5,2,0,0,0,0,1,0);
- 
-
+    
   glPushMatrix();   
     glEnable(GL_TEXTURE_2D);
     glRotatef(0, 1, 0, 0); 
@@ -362,15 +468,46 @@ void on_display(void){
     glEnd();
     glDisable(GL_TEXTURE_2D);
   glPopMatrix();     
-  
-  floor.floor_draw();
-  obstacle.obstacle_draw();
-  gRed.gamer1_draw();
-  gBlue.gamer2_draw();
-  
-  gRed.health();
-  gBlue.health();
-  
+   
+   gRed.health();
+   gBlue.health();
+   
+   floor_tank.floor_draw();
+   obstacle.obstacle_draw();
+   gRed.gamer1_draw();
+   gBlue.gamer2_draw();
+     
+   gBlue.speed(); 
+   gRed.speed(); 
+   
+   if(fire_red.fire_r){ 
+     
+    glPushMatrix();
+      glTranslatef(fire_red.m_x,fire_red.m_y,0);
+      fire_red.fire(gRed.m_x, gRed.m_y, gRed.m_z);
+      //&& (fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33))
+      if((fire_red.m_x <=gBlue.m_x -0.3) ){
+	fire_red.fire_r =0;
+	gBlue.m_health_blue +=0.3;
+      }
+    glPopMatrix();    
+   }
+   
+   if(fire_blue.fire_b){ 
+     
+    glPushMatrix();
+      glTranslatef(fire_blue.m_x,fire_blue.m_y,0);
+      fire_blue.fire(gBlue.m_x, gBlue.m_y, gBlue.m_z);
+      std::cout<< gRed.m_x << std::endl;
+      // && (fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))
+      if((fire_blue.m_x >=gRed.m_x +0.3)){
+	fire_blue.fire_b =0;
+	gRed.m_health_red +=0.3;
+      }
+    glPopMatrix();    
+   }
+   
+   
   glutSwapBuffers();
 }
 
@@ -379,8 +516,46 @@ void on_timer(int value){
     return;
   }
   up_vector_y_cor=0.01;
-  if(animation_ongoing){
+ 
+  if((fire_red.m_x > -3)&& 
+    (fire_red.m_y < (obstacle.m_y+0.33))&& 
+    (fire_red.m_y > (obstacle.m_y-0.33))){
+    
+    fire_red.m_x-=(gRed.m_y2+0.15);
+   
+    if(fire_red.m_y < 1){ 
+   //  fire_red.m_y+=0.5;
+    }else if(fire_red.m_y > gRed.m_y){
+     // fire_red.m_y-=0.5;
+    }
+  }
+  else{
+    fire_red.m_y-=20;
+    fire_red.fire_r =0;
+  }
+
+    if((fire_blue.m_x < 3)&& 
+    (fire_blue.m_y < (obstacle.m_y+0.33))&& 
+    (fire_blue.m_y > (obstacle.m_y-0.33))){
+    
+   fire_blue.m_x+=(gBlue.m_y2+0.15);
+   
+    if(fire_blue.m_y < 1){ 
+   //  fire_blue.m_y+=0.5;
+    }else if(fire_blue.m_y > gBlue.m_y){
+     // fire_blue.m_y-=0.5;
+    }
+  }
+  else{
+    fire_blue.m_y-=20;
+    fire_blue.fire_b =0;
+  }
   
+  if(gBlue.m_health_blue >=2 || gRed.m_health_red >= 2){
+    animation_ongoing =0;
+  }
+  
+  if(animation_ongoing){
     glutTimerFunc(TIMER_INTERVAL,on_timer, TIMER_ID);
   }
   glutPostRedisplay();
@@ -403,24 +578,71 @@ void on_keyboard(unsigned char key, int x, int y){
       if(gRed.m_x >= 0.32){
 	gRed.m_x -=POMERAJ;
       }
+      
       break;
     case '6':
       if(gRed.m_x < 0.86){
 	gRed.m_x +=POMERAJ;
       }
+      
       break;
+      
+    case '8':
+      if(gRed.m_rot < 90 && fire_red.fire_r == 0){
+	gRed.m_rot +=0.5;
+      }
+      break;
+    case '2':
+      if(gRed.m_rot >= 0 && fire_red.fire_r == 0){
+	gRed.m_rot -=0.5;
+      }
+      break;
+    case '5':
+      if(fire_red.fire_r == 0){
+	fire_red.fire_r = 1;
+	fire_red.fire_rot = gRed.m_rot;
+	fire_red.fire_speed = gRed.m_y2;
+	fire_red.m_x = gRed.m_x-0.6;
+	fire_red.m_y = gRed.m_y-0.08;
+      }
+      break;
+    
+      
     case 'd':
     case 'D':      
       if(gBlue.m_x <= -0.32){
 	gBlue.m_x +=POMERAJ;
       }
+      
       break;
     case 'a':
     case 'A':
       if(gBlue.m_x >= -0.86){
 	gBlue.m_x -=POMERAJ;
       }
+      
       break;
+      
+      case 'w':
+      if(gBlue.m_rot < 90){
+	gBlue.m_rot +=0.5;
+      }
+      break;
+      
+      case 's':
+      if(gBlue.m_rot >= 0){
+	gBlue.m_rot -=0.5;
+      }
+      break;   
+    case 'q':
+      if(fire_blue.fire_b == 0){
+	fire_blue.fire_b = 1;
+	fire_blue.fire_rot = gBlue.m_rot;
+	fire_blue.fire_speed = gBlue.m_y2;
+	fire_blue.m_x = gBlue.m_x+0.6;
+	fire_blue.m_y = gBlue.m_y-0.08;
+      }
+      break;
+
   }
-  glutPostRedisplay();
 }
