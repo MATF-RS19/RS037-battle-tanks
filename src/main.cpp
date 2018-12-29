@@ -7,7 +7,7 @@
 #define FILENAME "universe.bmp"
 #define POMERAJ 0.02
 
-int up=1, up2 = 1;
+int up=1, up2 = 1, up3 = 1, up4 = 1;
 double up_vector_y_cor=0;
 
 void on_display(void);
@@ -290,13 +290,12 @@ public:
 	  glTranslatef(-1,-0.5,0);
 	  glBegin(GL_POLYGON);
 	    glColor3f(0,0,0);
-	    glVertex3f(-0.3,0.05,0);
-	    glVertex3f(-0.3,-0.05,0);
-	    glVertex3f(-0.3 + 0.3*m_health_blue,-0.05,0);
-	    glVertex3f(-0.3 + 0.3*m_health_blue,0.05,0);
+	    glVertex3f(0.3,-0.05,0);
+	    glVertex3f(0.3,0.05,0);
+	    glVertex3f(0.3- 0.3*m_health_blue,0.05,0);
+	    glVertex3f(0.3- 0.3*m_health_blue,-0.05,0);
 	  glEnd();
 	glPopMatrix();
-//	  return m_health_blue;
       }
       
     void speed(){
@@ -498,7 +497,6 @@ void on_display(void){
     glPushMatrix();
       glTranslatef(fire_blue.m_x,fire_blue.m_y,0);
       fire_blue.fire(gBlue.m_x, gBlue.m_y, gBlue.m_z);
-      std::cout<< gRed.m_x << std::endl;
       // && (fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))
       if((fire_blue.m_x >=gRed.m_x +0.3)){
 	fire_blue.fire_b =0;
@@ -517,16 +515,22 @@ void on_timer(int value){
   }
   up_vector_y_cor=0.01;
  
-  if((fire_red.m_x > -3)&& 
-    (fire_red.m_y < (obstacle.m_y+0.33))&& 
-    (fire_red.m_y > (obstacle.m_y-0.33))){
+  if((fire_red.m_x > -3)){
+    //&&(fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33))){
     
     fire_red.m_x-=(gRed.m_y2+0.15);
    
-    if(fire_red.m_y < 1){ 
-   //  fire_red.m_y+=0.5;
-    }else if(fire_red.m_y > gRed.m_y){
-     // fire_red.m_y-=0.5;
+     if(up4){
+      fire_red.m_y+=gRed.m_y2+0.15;
+      if(fire_red.m_y>=0.5){	
+	up4=0;
+      }
+    }
+    else{
+      fire_red.m_y-=gRed.m_y2+0.15;
+      if(fire_red.m_y<=0.1){
+	up4=1;
+      }
     }
   }
   else{
@@ -534,16 +538,21 @@ void on_timer(int value){
     fire_red.fire_r =0;
   }
 
-    if((fire_blue.m_x < 3)&& 
-    (fire_blue.m_y < (obstacle.m_y+0.33))&& 
-    (fire_blue.m_y > (obstacle.m_y-0.33))){
-    
+    if((fire_blue.m_x < 3)){
+      //&&(fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))){
    fire_blue.m_x+=(gBlue.m_y2+0.15);
    
-    if(fire_blue.m_y < 1){ 
-   //  fire_blue.m_y+=0.5;
-    }else if(fire_blue.m_y > gBlue.m_y){
-     // fire_blue.m_y-=0.5;
+     if(up3){
+      fire_blue.m_y+=gBlue.m_y2+0.15;
+      if(fire_blue.m_y>=0.5){	
+	up3=0;
+      }
+    }
+    else{
+      fire_blue.m_y-=gBlue.m_y2+0.15;
+      if(fire_blue.m_y<=0.1){
+	up3=1;
+      }
     }
   }
   else{
@@ -571,20 +580,17 @@ void on_keyboard(unsigned char key, int x, int y){
       if(!animation_ongoing){
 	animation_ongoing = 1;
 	glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
-      std::cout << "pritisnuto g" << std::endl;
       }
       break;
     case '4':
       if(gRed.m_x >= 0.32){
 	gRed.m_x -=POMERAJ;
       }
-      
       break;
     case '6':
       if(gRed.m_x < 0.86){
 	gRed.m_x +=POMERAJ;
-      }
-      
+      }   
       break;
       
     case '8':
@@ -603,7 +609,7 @@ void on_keyboard(unsigned char key, int x, int y){
 	fire_red.fire_rot = gRed.m_rot;
 	fire_red.fire_speed = gRed.m_y2;
 	fire_red.m_x = gRed.m_x-0.6;
-	fire_red.m_y = gRed.m_y-0.08;
+	fire_red.m_y = gRed.m_y;//-0.08;
       }
       break;
     
@@ -640,7 +646,7 @@ void on_keyboard(unsigned char key, int x, int y){
 	fire_blue.fire_rot = gBlue.m_rot;
 	fire_blue.fire_speed = gBlue.m_y2;
 	fire_blue.m_x = gBlue.m_x+0.6;
-	fire_blue.m_y = gBlue.m_y-0.08;
+	fire_blue.m_y = gBlue.m_y+0.08;
       }
       break;
 
