@@ -36,6 +36,39 @@ void initialize(void){
   glEnable(GL_DEPTH_TEST);
 }
 
+void start_game(void){
+	char tekst1[256], *p1;
+	sprintf(tekst1, "Start game - g");
+
+	glPushMatrix();
+	  glRotatef(90,1,0,0);
+	  glColor3f(1,1,1);
+	  glRasterPos3f(-0.2,0,-0.5);
+	  for(p1 = tekst1; *p1!= '\0'; p1++){
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+	}
+	glPopMatrix();
+	  
+}
+
+
+
+void game_over(void){
+	char tekst1[256], *p1;
+	sprintf(tekst1, "Game over");
+
+	glPushMatrix();
+	  glRotatef(90,1,0,0);
+	  glColor3f(1,1,1);
+	  glRasterPos3f(-0.2,0,-0.5);
+	  for(p1 = tekst1; *p1!= '\0'; p1++){
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+	}
+	glPopMatrix();
+	  
+}
+
+
 void on_reshape(int width, int height){
   width_window = width;
   height_window =  height;
@@ -132,7 +165,7 @@ public:
 	    glVertex3f(0.3,0.05,0);
 	  glEnd();
 	glPopMatrix();
-		/* iscrtavanje crvnog pravouganoika preko helta tako da pokazuje koliko puta je ppogodjen igrac */
+	/* iscrtavanje crnog pravouganoika preko helta tako da pokazuje koliko puta je ppogodjen igrac */
 	glPushMatrix();
 	  glTranslatef(1,-0.5,0);
 	  glBegin(GL_POLYGON);
@@ -145,9 +178,9 @@ public:
 	glPopMatrix();
 	    
       }
-            /* merac brzine metka koji se ispaljuje  */
+        /* merac brzine metka koji se ispaljuje  */
     void speed(){
-   
+   /*skala crveno zelena za brzinu po kojoj se krece beli pravouganoik koji ustvari odredjuje brzinu metka */
       glDisable(GL_DEPTH_TEST);
       glTranslatef(-0.9,0.5,0);   
 	glPushMatrix();
@@ -179,27 +212,23 @@ public:
     glTranslatef(0,-m_y2,0);
     glPushMatrix();
     glColor3f(1,1,1);
-      glBegin(GL_POLYGON);
-	glVertex3f(0.02,0.01,0.5);
-	glVertex3f(-0.02,0.01,0.5);
-	glVertex3f(-0.02,-0.01,0.5);
-	glVertex3f(0.02,-0.01,0.5);    
-	glEnd();
+    glBegin(GL_POLYGON);
+      glVertex3f(0.02,0.01,0.5);
+      glVertex3f(-0.02,0.01,0.5);
+      glVertex3f(-0.02,-0.01,0.5);
+      glVertex3f(0.02,-0.01,0.5);    
+    glEnd();
     glPopMatrix();
     glTranslatef(0,m_y2,0);
 	
     glPopMatrix();
     glTranslatef(0.9,-0.5,0);   
-
-   
   }
- 
     double m_x;
     double m_y, m_y2 = 0;
     double m_z;
     double m_rot = 0;
     double m_health_red  = 0;
-   
 };
 
 class fire_red{
@@ -210,7 +239,7 @@ public:
   
    fire_red(double x, double y, double z, int fire_r)
    :m_x(x), m_y(y), m_z(z), fire_r(fire_r){};
-   
+   /* 'metak' koji ispaljuje crveni igrac */
    void fire(double m_x, double m_y, double m_z){
    	glDisable(GL_DEPTH_TEST);
 
@@ -247,19 +276,21 @@ public:
       //PLAVI
       glPushMatrix();
       glTranslatef(m_x, m_y, m_z);
+      /* iscrtavanje podnozja tenka */
       glPushMatrix();      
 	glPushMatrix();
 	  glColor3f(0,0,0.8);
 	  glScalef(1.5,0.6,1);
 	  glutSolidCube(0.1);
 	glPopMatrix();
+	/* iscrtavanje gornjeg dela tenka */
 	glPushMatrix();
 	  glColor3f(0,0,0.6);
 	  glTranslatef(0.01,0.05,0.02);
 	  glScalef(1,0.4,0.5);
 	  glutSolidCube(0.1);
 	glPopMatrix();
-	/*za pucanje*/
+	/* nisan -za pucanje */
 	glPushMatrix();
 	glTranslatef(0.01,0.05,0);
 	glRotatef(m_rot,0,0,1);
@@ -272,7 +303,8 @@ public:
       glTranslatef(-m_x, -m_y, -m_z);
       glPopMatrix();
       }
-      
+      /* zeleno crveni pravougaonik koji pokazuje koliko je helta ostalo igracu pre prekida igrice */
+
       void health(){
 	glPushMatrix();
 	  glTranslatef(-1,-0.5,0);
@@ -285,7 +317,7 @@ public:
 	    glVertex3f(0.3,0.05,0);
 	  glEnd();
 	glPopMatrix();
-	
+	/* iscrtavanje crnog pravouganoika preko helta tako da pokazuje koliko puta je ppogodjen igrac */	
 	glPushMatrix();
 	  glTranslatef(-1,-0.5,0);
 	  glBegin(GL_POLYGON);
@@ -297,7 +329,7 @@ public:
 	  glEnd();
 	glPopMatrix();
       }
-      
+        /* merac brzine metka koji se ispaljuje  */      
     void speed(){
 	glDisable(GL_DEPTH_TEST);
       glTranslatef(0.9,0.5,0);   
@@ -397,10 +429,10 @@ public:
   
    fire_blue(double x, double y, double z, int fire_b)
    :m_x(x), m_y(y), m_z(z), fire_b(fire_b){};
-   
+   /* 'metak' koji ispaljuje crveni igrac */   
    void fire(double m_x, double m_y, double m_z){
    	glDisable(GL_DEPTH_TEST);
-
+   /*skala crveno zelena za brzinu po kojoj se krece beli pravouganoik koji ustvari odredjuje brzinu metka */
 	glPushMatrix();
 	  glTranslatef((m_x), (m_y+0.08), m_z);
 	  glPushMatrix();
@@ -420,8 +452,6 @@ public:
   double fire_speed;
 };
 
-
-
 gamer1 gRed(0.6,0.06,0.25);
 gamer2 gBlue(-0.6,0.06,0.25);
 floor_tank floor_tank(1,0,0.5);
@@ -439,6 +469,7 @@ int main(int argc, char* argv[]){
   glutCreateWindow("battle tenks");
 
   initialize();
+
   glutDisplayFunc(on_display);
   glutReshapeFunc(on_reshape);
   glutKeyboardFunc(on_keyboard);
@@ -449,7 +480,7 @@ int main(int argc, char* argv[]){
 
 void on_display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+  /* postavljanje slike kao pozadinu */    
   glPushMatrix();   
     glEnable(GL_TEXTURE_2D);
     glRotatef(0, 1, 0, 0); 
@@ -478,6 +509,17 @@ void on_display(void){
      
    gBlue.speed(); 
    gRed.speed(); 
+
+   if((animation_ongoing == 0) && 
+     (gBlue.m_health_blue == 0) &&
+     (gRed.m_health_red == 0)){
+     start_game();
+  }else{
+    if(animation_ongoing == 0){
+      game_over();
+    }
+  }
+   
    
    if(fire_red.fire_r){ 
      
@@ -485,8 +527,10 @@ void on_display(void){
       glTranslatef(fire_red.m_x,fire_red.m_y,0);
       fire_red.fire(gRed.m_x, gRed.m_y, gRed.m_z);
       //&& (fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33))
-      if((fire_red.m_x <=gBlue.m_x -0.3) ){
-	fire_red.fire_r =0;
+      if((fire_red.m_x >=gBlue.m_x -0.03) && 
+	 (fire_red.m_x <=gBlue.m_x +0.03) &&
+	 (fire_red.m_y >=gBlue.m_y - 0.02)){
+	fire_red.fire_r = 0;
 	gBlue.m_health_blue +=0.3;
       }
     glPopMatrix();    
@@ -498,14 +542,15 @@ void on_display(void){
       glTranslatef(fire_blue.m_x,fire_blue.m_y,0);
       fire_blue.fire(gBlue.m_x, gBlue.m_y, gBlue.m_z);
       // && (fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))
-      if((fire_blue.m_x >=gRed.m_x +0.3)){
-	fire_blue.fire_b =0;
+      if((fire_blue.m_x <=gRed.m_x +0.03) &&
+	 (fire_blue.m_x >=gRed.m_x -0.03) &&
+	 (fire_blue.m_y >= gRed.m_y - 0.02)){
+	fire_blue.fire_b = 0;
 	gRed.m_health_red +=0.3;
       }
     glPopMatrix();    
    }
-   
-   
+ 
   glutSwapBuffers();
 }
 
@@ -646,7 +691,7 @@ void on_keyboard(unsigned char key, int x, int y){
 	fire_blue.fire_rot = gBlue.m_rot;
 	fire_blue.fire_speed = gBlue.m_y2;
 	fire_blue.m_x = gBlue.m_x+0.6;
-	fire_blue.m_y = gBlue.m_y+0.08;
+	fire_blue.m_y = gBlue.m_y;//+0.08;
       }
       break;
 
