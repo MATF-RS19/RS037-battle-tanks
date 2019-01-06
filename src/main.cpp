@@ -498,18 +498,20 @@ void on_display(void){
     glEnd();
     glDisable(GL_TEXTURE_2D);
   glPopMatrix();     
-   
+    /* iscrtavanje helta za oba igraca */   
    gRed.health();
    gBlue.health();
-   
+   /* iscrtavanje podloge */
    floor_tank.floor_draw();
+   /* iscrtavanje sivog zida koji se pomera */
    obstacle.obstacle_draw();
+   /* iscrtavanje oba igraca */
    gRed.gamer1_draw();
    gBlue.gamer2_draw();
-     
+   /* iscrtavanje merava brzine */
    gBlue.speed(); 
    gRed.speed(); 
-
+/* provera za ispis 'start_game' i 'game_over' i ispisivanje kada sta treba */
    if((animation_ongoing == 0) && 
      (gBlue.m_health_blue == 0) &&
      (gRed.m_health_red == 0)){
@@ -520,7 +522,7 @@ void on_display(void){
     }
   }
    
-   
+   /* provera da li je crveni tenk ispalio metak */
    if(fire_red.fire_r){ 
      
     glPushMatrix();
@@ -536,6 +538,7 @@ void on_display(void){
     glPopMatrix();    
    }
    
+   /* provera da li je plavi tenk ispalio metak */
    if(fire_blue.fire_b){ 
      
     glPushMatrix();
@@ -554,6 +557,7 @@ void on_display(void){
   glutSwapBuffers();
 }
 
+/* on_timer funkcija koja se poziva uvek kada se pokrene animacija */
 void on_timer(int value){
   if(value!=TIMER_ID){
     return;
@@ -615,6 +619,8 @@ void on_timer(int value){
   glutPostRedisplay();
  
 }
+
+/* on on_keyboard funkcija u kojoj su aktivirani odgovarajuci tasteri za pomeranje igraca */
 void on_keyboard(unsigned char key, int x, int y){
   switch (key) {
     case 27:
