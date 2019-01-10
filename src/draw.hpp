@@ -16,7 +16,7 @@ private:
 };
 
 
-/* zid */
+/* sivi zid koji se krece po y osi */
 class obstacle{
 public:
   obstacle()

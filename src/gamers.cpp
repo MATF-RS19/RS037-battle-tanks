@@ -183,6 +183,7 @@ void gamer2::health(){
       }
         /* merac brzine metka koji se ispaljuje  */      
 double gamer2::speed(double up_vector_y_cor){
+   /*skala crveno zelena za brzinu po kojoj se krece beli pravouganoik koji ustvari odredjuje brzinu metka */
   glDisable(GL_DEPTH_TEST);
   glTranslatef(0.9,0.5,0);   
   glPushMatrix();

@@ -28,7 +28,7 @@ public:
    fire_blue(double x, double y, double z, int fire_b)
    :m_x(x), m_y(y), m_z(z), fire_b(fire_b){};
    
-   /* 'metak' koji ispaljuje crveni igrac */   
+   /* 'metak' koji ispaljuje plavi igrac */   
    void fire(double m_x, double m_y, double m_z);
       
   double m_x;

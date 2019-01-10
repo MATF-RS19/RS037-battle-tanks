@@ -18,7 +18,7 @@ void floor_tank::floor_draw(){
 double obstacle::obstacle_draw(double up_vector_y_cor){
     if(up){
       m_y+=up_vector_y_cor;
-      if(m_y>.5){	
+      if(m_y>0.5){	
 	up=0;
       }
     }

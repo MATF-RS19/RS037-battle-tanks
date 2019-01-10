@@ -22,21 +22,26 @@ int width_window = 700;
 int height_window = 500;
 int animation_ongoing = 0;
 GLuint slika_pozadine;
-
+int up3 = 1; 
+int up4 = 1;
+double up_vector_y_cor=0;
+   
 
 void initialize(void){
   glClearColor(0,0,0,0);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  
+
+  /* postavljanje slike */  
     slika_pozadine=SOIL_load_OGL_texture("deixis_darksky.png",SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
   if(slika_pozadine==0){
    std::cout << "Nije ucitana slika" << std::endl;   
   } 
   glEnable(GL_DEPTH_TEST);
 }
-
+/* ispis teksta koji se prikazuje na samom pocetku kako bi se aktivirala igrica
+ * pritiskom na g i pokrenulo kretanje zida i meraca brzine */
 void start_game(void){
 	char tekst1[256], *p1;
 	sprintf(tekst1, "Start game - g");
@@ -52,8 +57,7 @@ void start_game(void){
 	  
 }
 
-
-
+/* ispis teksta koji se poziva kada neki od igraca potrosi helt */
 void game_over(void){
 	char tekst1[256], *p1;
 	sprintf(tekst1, "Game over");
@@ -84,11 +88,6 @@ void on_reshape(int width, int height){
   glLoadIdentity();
   gluLookAt(0,0.5,2,0,0,0,0,1,0);
 }
-
- int up3 = 1; 
- int up4 = 1;
- double up_vector_y_cor=0;
-   
 
 gamer1 gRed(0.6,0.06,0.25);
 gamer2 gBlue(-0.6,0.06,0.25);
