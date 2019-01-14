@@ -84,7 +84,7 @@ double gamer1::speed(double up_vector_y_cor){
        glVertex3f(0.02,-0.15,0.5);
      glEnd();
    glPopMatrix();
-	
+	/* menjanje m_y2 koordinate za translaciju belog pravougaonika za merenje brzine metka */
    if(red_up){
      m_y2+=up_vector_y_cor;
      if(m_y2>0.13){	
@@ -97,7 +97,7 @@ double gamer1::speed(double up_vector_y_cor){
       red_up=1;
      }
    }
-    
+    /* iscrtavanje belog pravougaonika za brzinu i njegova translacija za m_y2 */
    glTranslatef(0,-m_y2,0);
    glPushMatrix();
      glColor3f(1,1,1);
@@ -155,8 +155,7 @@ void gamer2::gamer2_draw(void){
 }
       
       
-      /* zeleno crveni pravougaonik koji pokazuje koliko je helta ostalo igracu pre prekida igrice */
-
+/* zeleno crveni pravougaonik koji pokazuje koliko je helta ostalo igracu pre prekida igrice */
 void gamer2::health(){
   glPushMatrix();
     glTranslatef(-1,-0.5,0);
@@ -180,8 +179,9 @@ void gamer2::health(){
       glVertex3f(0.3- 0.3*m_health_blue,-0.05,0);
     glEnd();
   glPopMatrix();
-      }
-        /* merac brzine metka koji se ispaljuje  */      
+}
+
+/* merac brzine metka koji se ispaljuje  */      
 double gamer2::speed(double up_vector_y_cor){
    /*skala crveno zelena za brzinu po kojoj se krece beli pravouganoik koji ustvari odredjuje brzinu metka */
   glDisable(GL_DEPTH_TEST);
@@ -198,7 +198,8 @@ double gamer2::speed(double up_vector_y_cor){
     glEnd();
 
   glPopMatrix();
-	
+  
+  /* menjanje m_y2 koordinate za translaciju belog pravougaonika za merenje brzine metka */
   if(blue_up){
     m_y2-=up_vector_y_cor;
     if(m_y2>0.13){	
@@ -211,6 +212,8 @@ double gamer2::speed(double up_vector_y_cor){
       blue_up=1;
     }
   } 
+  
+  /* iscrtavanje belog pravougaonika za brzinu i njegova translacija za m_y2 */
  glTranslatef(0,-m_y2,0);
  glPushMatrix();
   glColor3f(1,1,1);

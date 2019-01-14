@@ -106,7 +106,6 @@ fire_blue fire_blue(0,0,0,0);
 
 int main(int argc, char* argv[]){
 
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 
@@ -115,7 +114,6 @@ int main(int argc, char* argv[]){
   glutCreateWindow("battle tenks");
 
   initialize();
-
   glutDisplayFunc(on_display);
   glutReshapeFunc(on_reshape);
   glutKeyboardFunc(on_keyboard);
@@ -178,14 +176,18 @@ void on_display(void){
    
    /* provera da li je crveni tenk ispalio metak */
    if(fire_red.fire_r){ 
-     
     glPushMatrix();
       glTranslatef(fire_red.m_x,fire_red.m_y,0);
       fire_red.fire(gRed.m_x, gRed.m_y, gRed.m_z);
-      //&& (fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33))
-      if((fire_red.m_x >=gBlue.m_x -0.03) && 
+    
+      /* provera da li metak urada u zid ako i da li je pogodio igraca */
+      if((fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33)) 
+      && (fire_red.m_x < obstacle.m_x+0.2) && (fire_red.m_x > obstacle.m_x-0.2)){
+	fire_red.m_y = 10;
+      }else if((fire_red.m_x >=gBlue.m_x -0.03) && 
 	 (fire_red.m_x <=gBlue.m_x +0.03) &&
-	 (fire_red.m_y >=gBlue.m_y - 0.02)){
+	 (fire_red.m_y >=gBlue.m_y - 0.02) &&
+	 (fire_red.m_y <=gBlue.m_y + 0.02)     ){
 	fire_red.fire_r = 0;
 	gBlue.m_health_blue +=0.3;
       }

@@ -16,7 +16,8 @@ void floor_tank::floor_draw(){
 
 /* iscrtavanje zida i njegovo pomeranje gore-dole */
 double obstacle::obstacle_draw(double up_vector_y_cor){
-    if(up){
+
+  if(up){
       m_y+=up_vector_y_cor;
       if(m_y>0.5){	
 	up=0;
