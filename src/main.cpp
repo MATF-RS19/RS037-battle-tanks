@@ -24,6 +24,7 @@ int animation_ongoing = 0;
 GLuint slika_pozadine;
 int up3 = 1; 
 int up4 = 1;
+int win = 0;
 double up_vector_y_cor=0;
    
 
@@ -59,13 +60,20 @@ void start_game(void){
 
 /* ispis teksta koji se poziva kada neki od igraca potrosi helt */
 void game_over(void){
-	char tekst1[256], *p1;
-	sprintf(tekst1, "Game over");
 
+  char tekst1[256], *p1;
+
+	if(win == 2){
+		sprintf(tekst1, "Game over, winner is BLUE!");
+	  
+	}else{
+		sprintf(tekst1, "Game over, winner iz RED!");
+	}
+	
 	glPushMatrix();
 	  glRotatef(90,1,0,0);
 	  glColor3f(1,1,1);
-	  glRasterPos3f(-0.2,0,-0.5);
+	  glRasterPos3f(-0.5,0,-0.5);
 	  for(p1 = tekst1; *p1!= '\0'; p1++){
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
 	}
@@ -256,6 +264,9 @@ void on_timer(int value){
   }
   
   if(gBlue.m_health_blue >=2 || gRed.m_health_red >= 2){
+    if(gRed.m_health_red >=2)
+      win = 2;
+
     animation_ongoing =0;
   }
   
