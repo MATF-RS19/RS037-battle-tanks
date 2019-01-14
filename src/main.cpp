@@ -166,7 +166,7 @@ void on_display(void){
   } 
       if (gBlue.m_health_blue >1.5 && bonus_helt_b == 1){
      gBlue.help(0.4);  
-     if(gBlue.m_x >= 0.69 && gBlue.m_x <=0.75){
+     if(gBlue.m_x <= -0.69 && gBlue.m_x >=-0.75){
        gBlue.m_health_blue =0;
        bonus_helt_b = 0;
     }
@@ -199,10 +199,11 @@ void on_display(void){
       if((fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33)) 
       && (fire_red.m_x < obstacle.m_x+0.2) && (fire_red.m_x > obstacle.m_x-0.2)){
 	fire_red.m_y = 10;
-      }else if((fire_red.m_x >=gBlue.m_x -0.03) && 
+	fire_red.fire_r = 0;
+      }
+      if((fire_red.m_x >=gBlue.m_x -0.03) && 
 	 (fire_red.m_x <=gBlue.m_x +0.03) &&
-	 (fire_red.m_y >=gBlue.m_y - 0.02) &&
-	 (fire_red.m_y <=gBlue.m_y + 0.02)     ){
+	 (fire_red.m_y >=gBlue.m_y - 0.02)){
 	fire_red.fire_r = 0;
 	gBlue.m_health_blue +=0.3;
       }
@@ -287,7 +288,6 @@ void on_timer(int value){
     glutTimerFunc(TIMER_INTERVAL,on_timer, TIMER_ID);
   }
   glutPostRedisplay();
- 
 }
 
 /* on on_keyboard funkcija u kojoj su aktivirani odgovarajuci tasteri za pomeranje igraca */
