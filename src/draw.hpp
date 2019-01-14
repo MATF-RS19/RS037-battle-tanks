@@ -8,7 +8,6 @@ public:
     void floor_draw();
     
 private:
-  
   double m_x;
   double m_y;
   double m_z;
@@ -33,5 +32,4 @@ public:
   double m_y;
   double m_z;
   int up = 1;
-
 };

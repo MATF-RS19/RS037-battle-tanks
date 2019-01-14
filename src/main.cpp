@@ -16,7 +16,6 @@ void initialize(void);
 void on_reshape(int width, int height);
 void on_keyboard(unsigned char key, int x, int y);
 void on_timer(int value);
-void prepreka(void);
 
 int width_window = 700;
 int height_window = 500;
@@ -46,41 +45,37 @@ void initialize(void){
 /* ispis teksta koji se prikazuje na samom pocetku kako bi se aktivirala igrica
  * pritiskom na g i pokrenulo kretanje zida i meraca brzine */
 void start_game(void){
-	char tekst1[256], *p1;
-	sprintf(tekst1, "Start game - g");
+  char tekst1[256], *p1;
+  sprintf(tekst1, "Start game - g");
 
-	glPushMatrix();
-	  glRotatef(90,1,0,0);
-	  glColor3f(1,1,1);
-	  glRasterPos3f(-0.2,0,-0.5);
-	  for(p1 = tekst1; *p1!= '\0'; p1++){
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
-	}
-	glPopMatrix();
-	  
+  glPushMatrix();
+    glRotatef(90,1,0,0);
+    glColor3f(1,1,1);
+    glRasterPos3f(-0.2,0,-0.5);
+    for(p1 = tekst1; *p1!= '\0'; p1++){
+	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+    }
+  glPopMatrix();  
 }
 
 /* ispis teksta koji se poziva kada neki od igraca potrosi helt */
 void game_over(void){
-
   char tekst1[256], *p1;
 
-	if(win == 2){
-		sprintf(tekst1, "Game over, winner is BLUE!");
-	  
-	}else{
-		sprintf(tekst1, "Game over, winner iz RED!");
-	}
+  if(win == 2){
+    sprintf(tekst1, "Game over, winner is BLUE!");  
+  }else{
+    sprintf(tekst1, "Game over, winner iz RED!");
+  }
 	
-	glPushMatrix();
-	  glRotatef(90,1,0,0);
-	  glColor3f(1,1,1);
-	  glRasterPos3f(-0.5,0,-0.5);
-	  for(p1 = tekst1; *p1!= '\0'; p1++){
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
-	}
-	glPopMatrix();
-	  
+  glPushMatrix();
+    glRotatef(90,1,0,0);
+    glColor3f(1,1,1);
+    glRasterPos3f(-0.5,0,-0.5);
+    for(p1 = tekst1; *p1!= '\0'; p1++){
+      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+    }
+  glPopMatrix();  
 }
 
 
@@ -263,11 +258,9 @@ void on_timer(int value){
     fire_red.fire_r =0;
   }
 
-    if((fire_blue.m_x < 3)){
-      //&&(fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))){
-   fire_blue.m_x+=(gBlue.m_y2+0.15);
-   
-     if(up3){
+  if((fire_blue.m_x < 3)){
+    fire_blue.m_x+=(gBlue.m_y2+0.15);
+    if(up3){
       fire_blue.m_y+=gBlue.m_y2+0.15;
       if(fire_blue.m_y>=0.5){	
 	up3=0;
@@ -284,14 +277,12 @@ void on_timer(int value){
     fire_blue.m_y-=20;
     fire_blue.fire_b =0;
   }
-  
   if(gBlue.m_health_blue >=2 || gRed.m_health_red >= 2){
     if(gRed.m_health_red >=2)
       win = 2;
-
     animation_ongoing =0;
   }
-  
+ 
   if(animation_ongoing){
     glutTimerFunc(TIMER_INTERVAL,on_timer, TIMER_ID);
   }

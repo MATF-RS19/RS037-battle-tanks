@@ -1,4 +1,3 @@
-
 class gamer1{
 
 public:
@@ -23,7 +22,6 @@ public:
     double m_health_red  = 0;
     int red_up = 1;
 };
-
 
 
 /******************

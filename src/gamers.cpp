@@ -240,9 +240,9 @@ double gamer2::speed(double up_vector_y_cor){
   
   return up_vector_y_cor;
 }
+
 /* iscrtavanje male zelene loptice kao pomoc igracu da napuni helt i dobije drugu sansu */
 void gamer2::help(double x){
-  
   glPushMatrix();
   glTranslatef(-x,0,0);
     glColor3f(0,1,0);
