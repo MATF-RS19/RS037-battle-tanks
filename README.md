@@ -2,7 +2,11 @@
 battle tanks
 
 
-Battle tanks je igrica za dva igraca, koji medjusobno pucaju jedan na drugog. Pogotkom suprotnog igraca smanjuje mu se helt, i prvi igrac koji potrosi sam helt je izgubio. 
+Battle tanks je igrica za dva igraca, koji medjusobno pucaju jedan na drugog. 
+Pogotkom suprotnog igraca smanjuje mu se helt, i prvi igrac koji potrosi sam helt je izgubio. 
+Kada neki od igraca dodje prvi put do toga da mu je helt veci od 1.5 dobijaju kao pomoc lopticu
+koju mogu samo jednom da uzmu i da napune helt ponovo kao da pocetka igrice da vrate na 0.
+
 
 Igrica se pokrece pritiskom na taster 'g'.
 Sto se i ispisuje pri pokretanju igrice sa komandom ./tank,  "Start game -g".Tada se aktivira kretanje zida i meraca brzine metka i mogucnost kretanja tenkova levo desno kako bi izbegavali metkove.
