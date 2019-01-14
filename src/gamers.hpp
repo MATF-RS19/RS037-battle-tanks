@@ -13,6 +13,8 @@ public:
     void health();
       /* merac brzine metka koji se ispaljuje  */
     double speed(double up_vector_y_cor);
+     /* pomoc da igrac dobije drugu sansu napuni helt na pocetni kao sa pocetka igrice */    
+    void help(double m_x);
     
     double m_x;
     double m_y, m_y2 = 0;
@@ -43,6 +45,8 @@ public:
     void health();
       /* merac brzine metka koji se ispaljuje  */      
     double speed(double up_vector_y_cor);
+     /* pomoc da igrac dobije drugu sansu napuni helt na pocetni kao sa pocetka igrice */
+    void help(double m_x);
     
     double m_x;
     double m_y, m_y2 = 0;

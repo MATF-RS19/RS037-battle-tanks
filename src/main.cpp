@@ -25,6 +25,8 @@ GLuint slika_pozadine;
 int up3 = 1; 
 int up4 = 1;
 int win = 0;
+int bonus_helt_r = 1;
+int bonus_helt_b = 1;
 double up_vector_y_cor=0;
    
 
@@ -143,7 +145,8 @@ void on_display(void){
     glDisable(GL_TEXTURE_2D);
   glPopMatrix();     
    
-  /* iscrtavanje helta za oba igraca */   
+  /* iscrtavanje helta za oba igraca */ 
+  
    gRed.health();
    gBlue.health();
    
@@ -156,6 +159,23 @@ void on_display(void){
    /* iscrtavanje oba igraca */
    gRed.gamer1_draw();
    gBlue.gamer2_draw();
+   
+   /* provera za iscrtavanje bonus helta, kada neki od igraca dodje do toga da ima helt mevi od 1.5 a sa 2 
+    *se zavrsava igrica, jednom samo ima sansu da vrati helt na pocetak */
+   if (gRed.m_health_red >1.5 && bonus_helt_r == 1){
+     gRed.help(0.4);  
+     if(gRed.m_x >= 0.69 && gRed.m_x <=0.75){
+       gRed.m_health_red =0;
+       bonus_helt_r = 0;
+    }
+  } 
+      if (gBlue.m_health_blue >1.5 && bonus_helt_b == 1){
+     gBlue.help(0.4);  
+     if(gBlue.m_x >= 0.69 && gBlue.m_x <=0.75){
+       gBlue.m_health_blue =0;
+       bonus_helt_b = 0;
+    }
+  } 
    
    /* iscrtavanje merava brzine */
     up_vector_y_cor = gBlue.speed(up_vector_y_cor); 

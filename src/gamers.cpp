@@ -115,7 +115,16 @@ double gamer1::speed(double up_vector_y_cor){
   
  return up_vector_y_cor;
 }
-
+/* iscrtavanje male zelene loptice kao pomoc igracu da napuni helt i dobije drugu sansu */
+void gamer1::help(double x){
+  
+  glPushMatrix();
+  glTranslatef(x + 0.3,0,0);
+    glColor3f(0,1,0);
+    glutSolidSphere(0.05,10,10);
+  glPopMatrix();
+  
+}
 
 /******************
     PLAVI IGRAC
@@ -231,4 +240,13 @@ double gamer2::speed(double up_vector_y_cor){
   
   return up_vector_y_cor;
 }
+/* iscrtavanje male zelene loptice kao pomoc igracu da napuni helt i dobije drugu sansu */
+void gamer2::help(double x){
   
+  glPushMatrix();
+  glTranslatef(-x,0,0);
+    glColor3f(0,1,0);
+    glutSolidSphere(0.05,10,10);
+  glPopMatrix();
+  
+}  
