@@ -1,4 +1,3 @@
-
 class fire_red{
   
 public:

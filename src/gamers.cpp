@@ -1,7 +1,6 @@
 #include <GL/glut.h>
 #include "gamers.hpp"
 
-
 /******************
     CRVENI IGRAC
  ******************/

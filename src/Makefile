@@ -1,4 +1,4 @@
-CFLAGS = -Wall -Wextra -std=c++11 -lglut -lGLU -lGL -lSOIL
+CFLAGS =  -std=c++11 -lglut -lGLU -lGL -lSOIL
 
 tank: main.o draw.o fire.o gamers.o 
 	g++ $^ $(CFLAGS) -o $@

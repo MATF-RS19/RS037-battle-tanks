@@ -12,7 +12,6 @@
 #define POMERAJ 0.02
 
 void on_display(void);
-void initialize(void);
 void on_reshape(int width, int height);
 void on_keyboard(unsigned char key, int x, int y);
 void on_timer(int value);
@@ -27,57 +26,6 @@ int win = 0;
 int bonus_helt_r = 1;
 int bonus_helt_b = 1;
 double up_vector_y_cor=0;
-   
-
-void initialize(void){
-  glClearColor(0,0,0,0);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
-  /* postavljanje slike */  
-    slika_pozadine=SOIL_load_OGL_texture("deixis_darksky.png",SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
-  if(slika_pozadine==0){
-   std::cout << "Nije ucitana slika" << std::endl;   
-  } 
-  glEnable(GL_DEPTH_TEST);
-}
-/* ispis teksta koji se prikazuje na samom pocetku kako bi se aktivirala igrica
- * pritiskom na g i pokrenulo kretanje zida i meraca brzine */
-void start_game(void){
-  char tekst1[256], *p1;
-  sprintf(tekst1, "Start game - g");
-
-  glPushMatrix();
-    glRotatef(90,1,0,0);
-    glColor3f(1,1,1);
-    glRasterPos3f(-0.2,0,-0.5);
-    for(p1 = tekst1; *p1!= '\0'; p1++){
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
-    }
-  glPopMatrix();  
-}
-
-/* ispis teksta koji se poziva kada neki od igraca potrosi helt */
-void game_over(void){
-  char tekst1[256], *p1;
-
-  if(win == 2){
-    sprintf(tekst1, "Game over, winner is BLUE!");  
-  }else{
-    sprintf(tekst1, "Game over, winner iz RED!");
-  }
-	
-  glPushMatrix();
-    glRotatef(90,1,0,0);
-    glColor3f(1,1,1);
-    glRasterPos3f(-0.5,0,-0.5);
-    for(p1 = tekst1; *p1!= '\0'; p1++){
-      glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
-    }
-  glPopMatrix();  
-}
-
 
 void on_reshape(int width, int height){
   width_window = width;
@@ -110,7 +58,18 @@ int main(int argc, char* argv[]){
   glutInitWindowPosition(100,100);
   glutCreateWindow("battle tenks");
 
-  initialize();
+//  initialize();
+    glClearColor(0,0,0,0);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  /* postavljanje slike */  
+    slika_pozadine=SOIL_load_OGL_texture("deixis_darksky.png",SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID, SOIL_FLAG_INVERT_Y);
+  if(slika_pozadine==0){
+   std::cout << "Nije ucitana slika" << std::endl;   
+  } 
+  glEnable(GL_DEPTH_TEST);
   glutDisplayFunc(on_display);
   glutReshapeFunc(on_reshape);
   glutKeyboardFunc(on_keyboard);
@@ -121,6 +80,7 @@ int main(int argc, char* argv[]){
 
 void on_display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
   /* postavljanje slike kao pozadinu */    
   glPushMatrix();   
     glEnable(GL_TEXTURE_2D);
@@ -140,14 +100,14 @@ void on_display(void){
     glDisable(GL_TEXTURE_2D);
   glPopMatrix();     
    
-  /* iscrtavanje helta za oba igraca */ 
-  
-   gRed.health();
-   gBlue.health();
    
    /* iscrtavanje podloge */
    floor_tank.floor_draw();
-   
+
+  /* iscrtavanje helta za oba igraca */ 
+   gRed.health();
+   gBlue.health();
+
    /* iscrtavanje sivog zida koji se pomera */
    up_vector_y_cor = obstacle.obstacle_draw(up_vector_y_cor);
    
@@ -157,35 +117,60 @@ void on_display(void){
    
    /* provera za iscrtavanje bonus helta, kada neki od igraca dodje do toga da ima helt mevi od 1.5 a sa 2 
     *se zavrsava igrica, jednom samo ima sansu da vrati helt na pocetak */
-   if (gRed.m_health_red >1.5 && bonus_helt_r == 1){
+   if (gRed.m_health_red >1 && bonus_helt_r == 1){
      gRed.help(0.4);  
      if(gRed.m_x >= 0.69 && gRed.m_x <=0.75){
        gRed.m_health_red =0;
        bonus_helt_r = 0;
     }
   } 
-      if (gBlue.m_health_blue >1.5 && bonus_helt_b == 1){
+      if (gBlue.m_health_blue >1 && bonus_helt_b == 1){
      gBlue.help(0.4);  
      if(gBlue.m_x <= -0.69 && gBlue.m_x >=-0.75){
        gBlue.m_health_blue =0;
        bonus_helt_b = 0;
     }
   } 
-   
-   /* iscrtavanje merava brzine */
+   /* iscrtavanje meraca brzine */
     up_vector_y_cor = gBlue.speed(up_vector_y_cor); 
     gBlue.blue_up = gRed.red_up;
     up_vector_y_cor = gRed.speed(up_vector_y_cor);
     gBlue.blue_up = gRed.red_up;
-  
    /* provera za ispis 'start_game' i 'game_over' i ispisivanje kada sta treba */
    if((animation_ongoing == 0) && 
      (gBlue.m_health_blue == 0) &&
      (gRed.m_health_red == 0)){
-     start_game();
+     /* ispis teksta koji se prikazuje na samom pocetku kako bi se aktivirala igrica
+      * pritiskom na g i pokrenulo kretanje zida i meraca brzine */
+      char tekst1[256], *p1;
+      sprintf(tekst1, "Start game - g");
+
+      glPushMatrix();
+	glRotatef(90,1,0,0);
+	glColor3f(1,1,1);
+	glRasterPos3f(-0.2,0,-0.5);
+	for(p1 = tekst1; *p1!= '\0'; p1++){
+	    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+	}
+  glPopMatrix(); 
   }else{
     if(animation_ongoing == 0){
-      game_over();
+      /* ispis teksta koji se poziva kada neki od igraca potrosi helt */
+        char tekst1[256], *p1;
+
+	if(win == 2){
+	  sprintf(tekst1, "Game over, winner is BLUE!");  
+	}else{
+	  sprintf(tekst1, "Game over, winner iz RED!");
+	}
+	      
+	glPushMatrix();
+	  glRotatef(90,1,0,0);
+	  glColor3f(1,1,1);
+	  glRasterPos3f(-0.5,0,-0.5);
+	  for(p1 = tekst1; *p1!= '\0'; p1++){
+	    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p1);
+	  }
     }
   }
    
@@ -216,7 +201,6 @@ void on_display(void){
     glPushMatrix();
       glTranslatef(fire_blue.m_x,fire_blue.m_y,0);
       fire_blue.fire(gBlue.m_x, gBlue.m_y, gBlue.m_z);
-      // && (fire_blue.m_y < (obstacle.m_y+0.33))&& (fire_blue.m_y > (obstacle.m_y-0.33))
       if((fire_blue.m_x <=gRed.m_x +0.03) &&
 	 (fire_blue.m_x >=gRed.m_x -0.03) &&
 	 (fire_blue.m_y >= gRed.m_y - 0.02)){
@@ -236,9 +220,7 @@ void on_timer(int value){
   }
   up_vector_y_cor=0.01;
  
-  if((fire_red.m_x > -3)){
-    //&&(fire_red.m_y < (obstacle.m_y+0.33))&& (fire_red.m_y > (obstacle.m_y-0.33))){
-    
+  if((fire_red.m_x > -3)){   
     fire_red.m_x-=(gRed.m_y2+0.15);
    
      if(up4){
